@@ -81,11 +81,16 @@ def _discover_printers(hass: HomeAssistant) -> list[BambuPrinter]:
     device_registry = dr.async_get(hass)
     printers: list[BambuPrinter] = []
     for device in device_registry.devices.values():
-        for domain, serial in device.identifiers:
-            if domain == BAMBU_DOMAIN:
-                name = device.name_by_user or device.name or serial
-                printers.append(BambuPrinter(serial=serial, name=name))
-                break
+        for identifier in device.identifiers:
+            # Identifiers are conventionally (domain, id) 2-tuples, but not
+            # every integration follows that strictly, so index defensively
+            # instead of destructuring.
+            if len(identifier) < 2 or identifier[0] != BAMBU_DOMAIN:
+                continue
+            serial = identifier[1]
+            name = device.name_by_user or device.name or serial
+            printers.append(BambuPrinter(serial=serial, name=name))
+            break
     return printers
 
 
