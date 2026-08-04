@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bambu Lab OEPL Display",
+        "description": "Wähle den Bambu-Lab-Drucker und das OpenEPaperLink-Display, auf dem sein Status angezeigt werden soll.",
+        "data": {
+          "printer_device_id": "Drucker",
+          "tag_device_id": "E-Ink-Display"
+        }
+      },
+      "display": {
+        "title": "Display-Einstellungen",
+        "description": "Zeigt \"{printer}\" auf \"{tag}\" an. Breite/Höhe/Farben sind anhand der erkannten Display-Hardware vorausgefüllt — ändere sie nur, falls die Anzeige nicht korrekt dargestellt wird.",
+        "data": {
+          "width": "Breite (Pixel)",
+          "height": "Höhe (Pixel)",
+          "accent_colors": "Zusätzliche Farben, die das Display unterstützt",
+          "refresh_minutes": "Aktualisierungsintervall (Minuten)"
+        }
+      }
+    },
+    "error": {
+      "selection_invalid": "Bitte einen gültigen Drucker und ein gültiges Display auswählen."
+    },
+    "abort": {
+      "no_bambu_printer": "Kein Bambu-Lab-Drucker gefunden. Richte zuerst die Bambu-Lab-Integration ein (https://github.com/greghesp/ha-bambulab) und füge deinen Drucker hinzu.",
+      "no_oepl_tag": "Kein OpenEPaperLink-Tag gefunden. Richte zuerst die OpenEPaperLink-Integration ein und koppel ein Tag.",
+      "already_configured": "Diese Kombination aus Drucker und Display ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Display-Einstellungen",
+        "data": {
+          "width": "Breite (Pixel)",
+          "height": "Höhe (Pixel)",
+          "accent_colors": "Zusätzliche Farben, die das Display unterstützt",
+          "refresh_minutes": "Aktualisierungsintervall (Minuten)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bambu Lab OEPL Display",
+        "description": "Pick the Bambu Lab printer to track and the OpenEPaperLink tag to show it on.",
+        "data": {
+          "printer_device_id": "Printer",
+          "tag_device_id": "E-ink display"
+        }
+      },
+      "display": {
+        "title": "Display settings",
+        "description": "Showing \"{printer}\" on \"{tag}\". Width/height/colors are pre-filled from the tag's detected hardware — only change them if your display doesn't render correctly.",
+        "data": {
+          "width": "Width (pixels)",
+          "height": "Height (pixels)",
+          "accent_colors": "Extra colors the display supports",
+          "refresh_minutes": "Refresh interval (minutes)"
+        }
+      }
+    },
+    "error": {
+      "selection_invalid": "Please pick a valid printer and display."
+    },
+    "abort": {
+      "no_bambu_printer": "No Bambu Lab printer found. Set up the Bambu Lab integration (https://github.com/greghesp/ha-bambulab) and add your printer first.",
+      "no_oepl_tag": "No OpenEPaperLink tag found. Set up the OpenEPaperLink integration and pair a tag first.",
+      "already_configured": "This printer/display pair is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Display settings",
+        "data": {
+          "width": "Width (pixels)",
+          "height": "Height (pixels)",
+          "accent_colors": "Extra colors the display supports",
+          "refresh_minutes": "Refresh interval (minutes)"
+        }
+      }
+    }
+  }
+}
