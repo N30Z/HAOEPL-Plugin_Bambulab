@@ -85,6 +85,48 @@ def _as_int(state: State | None) -> int | None:
     return None if value is None else int(value)
 
 
+# HA's canonical UnitOfTime values (homeassistant.const.UnitOfTime), plus a
+# few lowercase aliases in case something reports its unit non-canonically.
+_MINUTES_PER_UNIT = {
+    "s": 1 / 60,
+    "sec": 1 / 60,
+    "second": 1 / 60,
+    "seconds": 1 / 60,
+    "min": 1.0,
+    "mins": 1.0,
+    "minute": 1.0,
+    "minutes": 1.0,
+    "h": 60.0,
+    "hr": 60.0,
+    "hrs": 60.0,
+    "hour": 60.0,
+    "hours": 60.0,
+    "d": 60.0 * 24,
+    "day": 60.0 * 24,
+    "days": 60.0 * 24,
+}
+
+
+def _as_minutes(state: State | None) -> float | None:
+    """Read a duration sensor's value in minutes, honoring its actual unit.
+
+    ha-bambulab's ``remaining_time`` sensor has a native unit of minutes but
+    a *suggested* unit of hours — Home Assistant then converts the value it
+    actually exposes as ``state.state`` to hours (e.g. ``"2.283"``, not
+    ``"137"``) unless the user has overridden their preferred unit in the
+    entity's settings. Reading ``state.state`` as a bare number and assuming
+    it's minutes silently produces a wildly wrong (far too short) remaining
+    time. Converting via the state's own ``unit_of_measurement`` attribute
+    is correct regardless of which unit HA (or the user) ends up showing.
+    """
+    value = _as_float(state)
+    if value is None or state is None:
+        return None
+    unit = str(state.attributes.get("unit_of_measurement") or "").strip().lower()
+    factor = _MINUTES_PER_UNIT.get(unit, 1.0)  # unknown/missing unit: assume native (minutes)
+    return value * factor
+
+
 def _clean_job_name(name: str | None) -> str:
     if not name:
         return "No active print"
@@ -142,7 +184,7 @@ def build_snapshot(hass: HomeAssistant, serial: str, printer_name: str) -> Print
         job_name=job_name,
         start_state=state_for(KEY_START_TIME),
         end_state=state_for(KEY_END_TIME),
-        remaining_minutes=_as_float(state_for(KEY_REMAINING_TIME)),
+        remaining_minutes=_as_minutes(state_for(KEY_REMAINING_TIME)),
     )
 
 
