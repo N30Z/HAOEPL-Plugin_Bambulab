@@ -17,7 +17,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.event import async_track_time_interval
 
-from .bambu import build_snapshot, has_printer_entities
+from .bambu import build_snapshot, has_printer_entities, is_print_running
 from .const import (
     CONF_COLORS,
     CONF_HEIGHT,
@@ -86,6 +86,10 @@ async def _async_push_update(hass: HomeAssistant, entry: ConfigEntry, refresh_mi
     colors = options.get(CONF_COLORS, DEFAULT_COLORS)
 
     if has_printer_entities(hass, serial):
+        if not is_print_running(hass, serial):
+            # Only refresh the tag while a print is active; otherwise leave
+            # the last image in place (saves tag battery).
+            return
         snapshot = build_snapshot(hass, serial, printer_name)
         elements = render_snapshot(snapshot, width, height, colors)
     else:

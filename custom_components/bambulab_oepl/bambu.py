@@ -33,7 +33,10 @@ KEY_START_TIME = "start_time"
 KEY_END_TIME = "end_time"
 KEY_REMAINING_TIME = "remaining_time"
 
-UNAVAILABLE_STATES = (None, "", "unknown", "unavailable")
+# print_status values of ha-bambulab that mean a job is in progress.
+ACTIVE_PRINT_STATUSES = ("running", "pause", "prepare")
+
+UNAVAILABLE_STATES =(None, "", "unknown", "unavailable")
 
 
 @dataclass
@@ -149,6 +152,12 @@ def has_printer_entities(hass: HomeAssistant, serial: str) -> bool:
         entity_registry.async_get_entity_id("sensor", BAMBU_DOMAIN, f"{serial}_{key}") is not None
         for key in (KEY_PRINT_STATUS, KEY_STAGE, KEY_NOZZLE_TEMP)
     )
+
+
+def is_print_running(hass: HomeAssistant, serial: str) -> bool:
+    """Whether the printer currently has an active job (running/paused/preparing)."""
+    value = _state_value(_get_state(hass, serial, KEY_PRINT_STATUS))
+    return value is not None and value.lower() in ACTIVE_PRINT_STATUSES
 
 
 def build_snapshot(hass: HomeAssistant, serial: str, printer_name: str) -> PrintSnapshot:
